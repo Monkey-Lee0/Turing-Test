@@ -1,26 +1,32 @@
+#pragma GCC optimize("Ofast")
 #include<bits/stdc++.h>
 #include"generator.h"
-std::mt19937 RNG(time(nullptr));
+using namespace std;
+
 int main()
 {
-    while(true)
+	int T=10,cnt=0;
+    while(T--)
     {
-        if(RNG()&1)
+        if(rng()&1)
         {
             if(check(generator_normal(5)))
-                std::cout<<"Oh! You are maybe a human!"<<std::endl;
+                std::cout<<"Oh! You are maybe a human!"<<std::endl,cnt++;
             else
                 std::cout<<"Hello, bot. You are arrested!"<<std::endl;
         }
         else
         {
-            if(check(generator_arithmetic(30)))
-                std::cout<<"Oh! You are maybe a human!"<<std::endl;
+            if(check(generator_arithmetic(3)))
+                std::cout<<"Oh! You are maybe a human!"<<std::endl,cnt++;
             else
                 std::cout<<"Hello, bot. You are arrested!"<<std::endl;
         }
     }
-
+	if(cnt>=3)
+		print_human();
+	else
+		print_bot();
 
     return 0;
 }

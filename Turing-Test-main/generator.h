@@ -160,7 +160,6 @@ void print_bot()
 
 void print(const captcha_data &a)
 {
-	IMAGE img1,img2;
 	initgraph(1800, 450,EX_SHOWCONSOLE);
 	static IMAGE img(1800, 450);
 	SetWorkingImage(&img);
@@ -168,6 +167,7 @@ void print(const captcha_data &a)
 	cleardevice();
 	for(int i=1;i<=5;i++)
 	{
+		IMAGE img1,img2;
 		char t=a.question[i-1];
 		std::string now="./picture/";
 		if((t>='A'&&t<='Z')||t=='+'||t=='-'||t=='*')
@@ -181,7 +181,8 @@ void print(const captcha_data &a)
 		else
 			now+=t;
 		now+="/1.png";
-		loadimage(&img1,now.c_str(), 220,120,false);
+		const int sizx=rand_int(150,350),sizy=rand_int(60,150);
+		loadimage(&img1,now.c_str(), sizx,sizy,false);
 		double angle=pi/12+pi/6*rand_double();
 		if(rng()&1)
 			angle=-angle;

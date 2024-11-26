@@ -193,6 +193,73 @@ void print(const captcha_data &a)
 		double left=rng()%1600+80,top=rng()%300+80;
 		int length=round(30+30*rand_double()),width=round(15+15*rand_double());
 		double angle=2*pi*rand_double();
+		for(double x=1;x<=length;x+=0.2)
+			for(double y=1;y<=width;y+=0.1)
+			{
+				double cross=hypot(x,y),ang=angle+atan(y/x);
+				double pos_x=left+cross*cos(ang),pos_y=top+cross*sin(ang);
+				if(rng()%4==1)
+					putpixel(pos_x,pos_y,rand_color_gray());
+			}
+	}
+	for(int i=1;i<=40;i++)//paint lines
+	{
+		double left=rng()%1600+80,top=rng()%300+80;
+		int length=round(300+700*rand_double()),width=round(3+3*rand_double());
+		double angle=2*pi*rand_double();
+		for(double x=1;x<=length;x+=0.5)
+			for(double y=1;y<=width;y+=0.1)
+			{
+				double cross=hypot(x,y),ang=angle+atan(y/x);
+				double pos_x=left+cross*cos(ang),pos_y=top+cross*sin(ang);
+				if(rng()%2==1)
+					putpixel(pos_x,pos_y,rand_color());
+			}
+	}
+	for(int i=1;i<=1800;i++)//gray background color
+		for(int j=1;j<=450;j++)
+			if(near_white(getpixel(i,j)))
+				putpixel(i,j,rand_color_white());
+	else if(near_black(getpixel(i,j)))
+		putpixel(i,j,rand_color_black());
+	SetWorkingImage();
+	putimage(0, 0, &img);
+}
+
+void save(const captcha_data &a,int cnt,std::string name)
+{
+	IMAGE img1,img2;
+	static IMAGE img(1800, 450);
+	SetWorkingImage(&img);
+	setbkcolor(WHITE);
+	cleardevice();
+	for(int i=1;i<=5;i++)
+	{
+		char t=a.question[i-1];
+		std::string now="./picture/";
+		if((t>='A'&&t<='Z')||t=='+'||t=='-'||t=='*')
+			now+='~';
+		if(t=='+')
+			now+="add";
+		else if(t=='-')
+			now+="sub";
+		else if(t=='*')
+			now+="mul";
+		else
+			now+=t;
+		now+="/1.png";
+		loadimage(&img1,now.c_str(), 220,120,false);
+		double angle=pi/12+pi/6*rand_double();
+		if(rng()&1)
+			angle=-angle;
+		rotateimage(&img2, &img1,angle,WHITE,true);
+		putimage((i-1)*320+rand_int(25,50),rand_int(20,100),&img2);
+	}
+	for(int i=1;i<=60;i++)//paint rectangles
+	{
+		double left=rng()%1600+80,top=rng()%300+80;
+		int length=round(30+30*rand_double()),width=round(15+15*rand_double());
+		double angle=2*pi*rand_double();
 		for(double x=1;x<=length;x+=0.1)
 			for(double y=1;y<=width;y+=0.1)
 			{
@@ -220,10 +287,12 @@ void print(const captcha_data &a)
 		for(int j=1;j<=450;j++)
 			if(near_white(getpixel(i,j)))
 				putpixel(i,j,rand_color_white());
-			else if(near_black(getpixel(i,j)))
-				putpixel(i,j,rand_color_black());
-	SetWorkingImage();
+	else if(near_black(getpixel(i,j)))
+		putpixel(i,j,rand_color_black());
+	saveimage(("source/picture/"+name+std::to_string(cnt)+".jpg").c_str(),&img);
 	putimage(0, 0, &img);
+	freopen(("source/data/"+name+std::to_string(cnt)+".txt").c_str(),"w",stdout);
+	std::cout<<a.question<<std::endl<<a.result<<std::endl;
 }
 
 inline bool check(const captcha_data &a)
